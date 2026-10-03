@@ -5,31 +5,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unzip launcher
-        run: |
-          ZIP=$(ls *.zip | head -n 1)
-          echo "Descompactando $ZIP"
-          unzip -o "$ZIP"
-          ls -la
-          if [! -f "./gradlew" ]; then
-            for d in */; do
-              if [ -f "$d/gradlew" ]; then
-                echo "Movendo de $d"
-                cp -r $d/*.
-                break
-              fi
-            done
-          fi
-          ls -la
-      - name: Set up JDK 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Grant execute
-        run: chmod +x gradlew
       - name: Build APK
-        run: . /gradlew assembleDebug
+        run: |
+          ZIP=$(ls *.zip | head -n 1)
+          unzip -o "$ZIP"
+          chmod +x gradlew
+          ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
