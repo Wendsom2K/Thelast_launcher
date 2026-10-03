@@ -10,10 +10,11 @@ jobs:
           ZIP=$(ls *.zip | head -n 1)
           echo "Descompactando $ZIP"
           unzip -o "$ZIP"
-          # Se o zip criou uma pasta, puxa tudo pra raiz
+          ls -la
           if [! -f "./gradlew" ]; then
             for d in */; do
               if [ -f "$d/gradlew" ]; then
+                echo "Movendo de $d"
                 cp -r $d/*.
                 break
               fi
